@@ -797,22 +797,22 @@ function monitorChatGPTInputs() {
         }
       });
       
-      // 2. 键盘事件监听 - 只在按下斜杠键时记录，不直接触发菜单
+      // 2. 键盘事件监听 - 按下斜杠键时显示菜单
       input.addEventListener('keydown', (e) => {
         // 精确匹配斜杠键，忽略问号(shift+/)
-        if ((e.key === '/' && !e.shiftKey) || 
-            (e.key === 'Slash' && !e.shiftKey) || 
+        if ((e.key === '/' && !e.shiftKey) ||
+            (e.key === 'Slash' && !e.shiftKey) ||
             (e.keyCode === 191 && !e.shiftKey)) {
           // 标记当前活动输入框
           activeInput = input;
-          
+
           // 如果粘贴状态还在冷却期，忽略
           if (isRecentPaste && Date.now() - lastInputTime < PASTE_COOLDOWN) {
             return;
           }
-          
-          // 不在这里显示菜单，让input事件来处理
-          // 这样可以避免重复触发和粘贴冲突
+
+          // 直接显示菜单，确保斜杠键可呼出插件面板
+          setTimeout(() => showMenu(input), 0);
         }
       });
       
