@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
       pinButton.innerHTML = '⬆︎';
       pinButton.addEventListener('click', function(e) {
         e.stopPropagation();
-        pinMode(mode.id);
+        pinMode(mode.id, modes, chrome.storage.local, showToast, renderModeDropdown);
       });
       
       // 添加悬停效果
@@ -993,23 +993,6 @@ document.addEventListener('DOMContentLoaded', function() {
         showToast('已经是当前模式的第一个提示词');
       }
     });
-  }
-
-  // 上移模式功能
-  function pinMode(id) {
-    const index = modes.findIndex(m => m.id === id);
-    
-    if (index > 0) {
-      // 交换当前模式与上一个模式的位置
-      const temp = modes[index];
-      modes[index] = modes[index - 1];
-      modes[index - 1] = temp;
-      
-      chrome.storage.local.set({ modes: modes }, function() {
-        showToast('模式已上移');
-        renderModeDropdown();
-      });
-    }
   }
 
   // 全局搜索结果显示

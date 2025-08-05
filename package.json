@@ -1,0 +1,20 @@
+{
+  "name": "slash-command-prompter",
+  "version": "1.0.0",
+  "description": "The Slash Command Prompter is a browser extension designed to enhance productivity by allowing users to quickly insert predefined prompts into any text input field. It provides a user-friendly interface for managing and utilizing these prompts efficiently.",
+  "main": "background.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-chrome": "^0.7.1"
+  }
+}
