@@ -101,34 +101,33 @@ function createMenu() {
 
 // 复制文本到剪贴板
 function copyToClipboard(text) {
-  navigator.clipboard.writeText(text)
-    .then(() => {
-      // 显示复制成功的提示
-      const toast = document.createElement('div');
-      toast.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 8px 16px;
-        background-color: #333;
-        color: white;
-        border-radius: 4px;
-        z-index: 10001;
-        font-family: Arial, sans-serif;
-        font-size: 14px;
-      `;
-      toast.textContent = '已复制到剪贴板';
-      document.body.appendChild(toast);
-      
-      // 2秒后移除提示
-      setTimeout(() => {
-        document.body.removeChild(toast);
-      }, 2000);
-    })
-    .catch(err => {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        showToast('已复制到剪贴板');
+      })
+      .catch(err => {
+        console.error('复制失败:', err);
+        showToast('复制失败');
+      });
+  } else {
+    // 兼容不支持 Clipboard API 的环境
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    try {
+      const successful = document.execCommand('copy');
+      showToast(successful ? '已复制到剪贴板' : '复制失败');
+    } catch (err) {
       console.error('复制失败:', err);
-    });
+      showToast('复制失败');
+    }
+    document.body.removeChild(textarea);
+  }
 }
 
 // 更新菜单显示

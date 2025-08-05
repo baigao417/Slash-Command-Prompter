@@ -929,14 +929,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // 添加复制到剪贴板功能
   function copyToClipboard(text) {
-    navigator.clipboard.writeText(text)
-      .then(() => {
-        showToast('已复制到剪贴板');
-      })
-      .catch(err => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          showToast('已复制到剪贴板');
+        })
+        .catch(err => {
+          console.error('复制失败:', err);
+          showToast('复制失败');
+        });
+    } else {
+      // 兼容不支持 Clipboard API 的环境
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      try {
+        const successful = document.execCommand('copy');
+        showToast(successful ? '已复制到剪贴板' : '复制失败');
+      } catch (err) {
         console.error('复制失败:', err);
         showToast('复制失败');
-      });
+      }
+      document.body.removeChild(textarea);
+    }
   }
 
   // 上移提示词功能
