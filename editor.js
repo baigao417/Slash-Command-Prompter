@@ -2,6 +2,7 @@
 const editorForm = document.getElementById('editor-form');
 const editorTitle = document.getElementById('editor-title');
 const promptIdInput = document.getElementById('prompt-id');
+const promptModeIdInput = document.getElementById('prompt-mode-id');
 const promptNameInput = document.getElementById('prompt-name');
 const promptContentInput = document.getElementById('prompt-content');
 const saveButton = document.getElementById('save-button');
@@ -27,11 +28,13 @@ document.addEventListener('DOMContentLoaded', () => {
         promptIdInput.value = prompt.id;
         promptNameInput.value = prompt.name;
         promptContentInput.value = prompt.content;
+        promptModeIdInput.value = prompt.modeId || 'default';
       }
     });
   } else {
     editorTitle.textContent = '添加提示词';
     promptIdInput.value = '';
+    promptModeIdInput.value = 'default';
   }
   
   // 添加事件监听器
@@ -45,6 +48,7 @@ function savePrompt(e) {
   
   const name = promptNameInput.value.trim();
   const content = promptContentInput.value.trim();
+  const modeId = promptModeIdInput.value || 'default';
   
   if (!name || !content) {
     alert('请填写提示词名称和内容');
@@ -59,12 +63,12 @@ function savePrompt(e) {
       // 编辑现有提示词
       const index = prompts.findIndex(p => p.id === promptId);
       if (index !== -1) {
-        prompts[index] = { id: promptId, name, content };
+        prompts[index] = { id: promptId, name, content, modeId };
       }
     } else {
       // 添加新提示词
       const newId = 'prompt-' + Date.now();
-      prompts.push({ id: newId, name, content });
+      prompts.push({ id: newId, name, content, modeId });
     }
     
     chrome.storage.local.set({ prompts: prompts }, () => {
@@ -80,4 +84,4 @@ function savePrompt(e) {
 // 关闭窗口
 function closeWindow() {
   window.close();
-} 
+}
